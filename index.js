@@ -2,10 +2,11 @@ let crcTable=[0,4129,8258,12387,16516,20645,24774,28903,33032,37161,41290,45419,
 let htmlForm = `<!DOCTYPE html><html><head><meta content="width=device-width,initial-scale=1" name="viewport"><title>Dynamic QRIS Generator</title><body><form action="/" method="POST" autocomplete="on"><textarea name="data" rows="4" cols="30" placeholder="QRIS data" required></textarea><br><input type="number" name="price" placeholder="Price" required/><select name="type"><option selected value="html">HTML</option><option value="json">JSON</option></select><br><input type="submit" value="submit"></form></body></html>`;
 async function readRequestBody(request) {
   const { headers } = request;
-  const contentType = headers.get('content-type') || '';
+  const contentType = headers.get('content-type');
   if (contentType.includes('application/json')) {
     return JSON.stringify(await request.json());
-  } else if (contentType.includes('form')) {
+  }
+  if (contentType.includes('form')) {
     const formData = await request.formData();
     const body = {};
     for (const entry of formData.entries()) {
@@ -18,13 +19,11 @@ async function readRequestBody(request) {
     let calc = crc16(text).toString(16).toUpperCase()
     let res = `${text}${calc}`;
     return res;
-  } else {
-    return 'QRIS TIDAK VALID';
-  }
+  } 
 }
 async function handleRequest(request) {
   let data = await readRequestBody(request)
-  let content = `<!doctype html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"><title>QRIS</title></head><body><img src="https://upload.wikimedia.org/wikipedia/commons/e/e1/QRIS_logo.svg" alt="QRIS logo" width="220" style="margin:27px 0"><img src="https://upload.wikimedia.org/wikipedia/commons/8/83/Gerbang_Pembayaran_Nasional_logo.svg" alt="GPN logo" width="50" style="float:right"><br><center><img src="https://chart.googleapis.com/chart?cht=qr&chs=350x350&chld=Q|1&chl=${data}" alt="QRIS data" width="350"></body></html>`;
+  let content = `<!doctype html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"><title>QRIS</title></head><body><img src="https://cdn.jsdelivr.net/gh/ihsangan/files/qris.svg" alt="QRIS logo" width="220" style="margin:27px 0"><img src="https://cdn.jsdelivr.net/gh/ihsangan/files/gpn.svg" alt="GPN logo" width="50" style="float:right"><br><center><img src="https://chart.googleapis.com/chart?cht=qr&chs=350x350&chld=Q|1&chl=${data}" alt="QRIS data" width="350"></body></html>`;
   return new Response(content, {headers:{"Content-Type":"text/html"}})
 }
 addEventListener('fetch', event => {
