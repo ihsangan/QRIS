@@ -30,7 +30,6 @@ async function readRequestBody(request) {
       return new Response(raw, {headers:{"Content-Type":"application/json"}})
     }
     return;
-  } 
 }
 async function handleRequest(request) {
   let data = await readRequestBody(request)
