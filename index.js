@@ -23,7 +23,7 @@ async function readRequestBody(request) {
 }
 async function handleRequest(request) {
   let data = await readRequestBody(request)
-  let content = `<!doctype html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"><title>QRIS</title></head><body><img src="https://upload.wikimedia.org/wikipedia/commons/e/e1/QRIS_logo.svg" alt="QRIS logo" width="220" style="margin:27px 0"><img src="https://upload.wikimedia.org/wikipedia/commons/8/83/Gerbang_Pembayaran_Nasional_logo.svg" alt="GPN logo" width="50" style="float:right"><br><center><img src="https://chart.googleapis.com/chart?cht=qr&chs=350x350&chld=Q|1&chl=${res}" alt="QRIS data" width="350"></body></html>`;
+  let content = `<!doctype html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"><title>QRIS</title></head><body><img src="https://upload.wikimedia.org/wikipedia/commons/e/e1/QRIS_logo.svg" alt="QRIS logo" width="220" style="margin:27px 0"><img src="https://upload.wikimedia.org/wikipedia/commons/8/83/Gerbang_Pembayaran_Nasional_logo.svg" alt="GPN logo" width="50" style="float:right"><br><center><img src="https://chart.googleapis.com/chart?cht=qr&chs=350x350&chld=Q|1&chl=${data}" alt="QRIS data" width="350"></body></html>`;
   return new Response(content, {headers:{"Content-Type":"text/html"}})
 }
 addEventListener('fetch', event => {
