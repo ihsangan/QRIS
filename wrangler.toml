@@ -1,4 +1,4 @@
-name = "template"
+name = "qris"
 type = "javascript"
 account_id = ""
 workers_dev = true
