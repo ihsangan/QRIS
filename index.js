@@ -16,7 +16,7 @@ async function readRequestBody(request) {
   }
     let text = data.data;
     let price = data.price;
-    let output = data.output
+    let output = data.output;
     text = text.replace('010211', '010212').replace('5303360', `5303360540${price.length}${price}`).slice(0, -4);
     let calc = crc16(text).toString(16).toUpperCase()
     let rp = price.replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.")
