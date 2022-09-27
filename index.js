@@ -4,7 +4,7 @@ async function readRequestBody(request) {
   const { headers } = request;
   const contentType = headers.get('content-type');
   if (contentType.includes('application/json')) {
-    let data = JSON.stringify(await request.json());
+    return JSON.stringify(await request.json());
   }
   if (contentType.includes('form')) {
     const formData = await request.formData();
@@ -13,21 +13,14 @@ async function readRequestBody(request) {
       body[entry[0]] = entry[1];
     }
     let data = JSON.parse(JSON.stringify(body));
-  }
     let text = data.data;
     let price = data.price;
-    let output = data.output;
     text = text.replace('010211', '010212').replace('5303360', `5303360540${price.length}${price}`).slice(0, -4);
     let calc = crc16(text).toString(16).toUpperCase()
-    let rp = price.replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.")
-    let lmn = text.indexOf('02ID59') + 6
-    let mnn = text.slice(lmn, lmn + 2)
-    lmn = lmn + 2;
-    let mmn = `-${lgh - lmn - mnn}`;
-    let mn = text.slice(lmn, mmn);
-    let raw = `{ "name": "${mn}", "price": "Rp${rp},00", "data": "${text}${calc}" }`;
-      return new Response(raw, {headers:{"Content-Type":"application/json"}})
-    }
+    let res = `${text}${calc}`;
+    return new Response(res);
+  } 
+}
 
 async function handleRequest(request) {
   let data = await readRequestBody(request)
