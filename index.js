@@ -30,7 +30,7 @@ addEventListener('fetch', event => {
   if (url.includes('submit')) {
     return event.respondWith(new Response(htmlForm, {headers:{"Content-Type":"text/html"}}));
   }
-  if (request.method === 'POST' && headers.get('content-type').includes('form') {
+  if (request.method === 'POST' && headers.get('content-type').includes('form')) {
     return event.respondWith(readRequestBody(request));
   } else if (request.method === 'GET') {
     return event.respondWith(new Response(`The request was a GET`));
