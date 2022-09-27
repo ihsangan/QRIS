@@ -13,13 +13,13 @@ async function readRequestBody(request) {
       body[entry[0]] = entry[1];
     }
     let data = JSON.parse(JSON.stringify(body));
+}
     let text = data.data;
     let price = data.price;
     text = text.replace('010211', '010212').replace('5303360', `5303360540${price.length}${price}`).slice(0, -4);
     let calc = crc16(text).toString(16).toUpperCase()
     let res = `{ "data": "${text}${calc}" }`;
     return new Response(res);
-  } 
 }
 
 async function handleRequest(request) {
