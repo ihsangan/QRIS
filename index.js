@@ -4,7 +4,7 @@ async function readRequestBody(request) {
   const { headers } = request;
   const contentType = headers.get('content-type');
   if (contentType.includes('application/json')) {
-    return JSON.stringify(await request.json());
+    let data = JSON.stringify(await request.json());
   }
   if (contentType.includes('form')) {
     const formData = await request.formData();
@@ -17,7 +17,7 @@ async function readRequestBody(request) {
     let price = data.price;
     text = text.replace('010211', '010212').replace('5303360', `5303360540${price.length}${price}`).slice(0, -4);
     let calc = crc16(text).toString(16).toUpperCase()
-    let res = `${text}${calc}`;
+    let res = `{ "data": "${text}${calc}" }`;
     return new Response(res);
   } 
 }
