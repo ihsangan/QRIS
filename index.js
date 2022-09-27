@@ -4,7 +4,7 @@ async function readRequestBody(request) {
   const { headers } = request;
   const contentType = headers.get('content-type');
   if (contentType.includes('application/json')) {
-    let data = JSON.stringify(await request.json());
+    let data = JSON.parse(JSON.stringify(await request.json()));
   }
   if (contentType.includes('form')) {
     const formData = await request.formData();
