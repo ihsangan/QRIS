@@ -3,9 +3,6 @@ let htmlForm = `<!DOCTYPE html><html><head><meta content="width=device-width,ini
 async function readRequestBody(request) {
   const { headers } = request;
   const contentType = headers.get('content-type');
-  if (contentType.includes('application/json')) {
-    let data = JSON.parse(JSON.stringify(await request.json()));
-  }
   if (contentType.includes('form')) {
     const formData = await request.formData();
     const body = {};
@@ -18,22 +15,22 @@ async function readRequestBody(request) {
     text = text.replace('010211', '010212').replace('5303360', `5303360540${price.length}${price}`).slice(0, -4);
     let calc = crc16(text).toString(16).toUpperCase()
     let res = `{ "data": "${text}${calc}" }`;
-    return new Response(res);
+    return handleRequest(data);
   }
 }
 
-async function handleRequest(request) {
-  let data = await readRequestBody(request)
-  let content = `<!doctype html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"><title>QRIS</title></head><body><img src="https://cdn.jsdelivr.net/gh/ihsangan/files/qris.svg" alt="QRIS logo" width="220" style="margin:27px 0"><img src="https://cdn.jsdelivr.net/gh/ihsangan/files/gpn.svg" alt="GPN logo" width="50" style="float:right"><br><center><img src="https://chart.googleapis.com/chart?cht=qr&chs=350x350&chld=Q|1&chl=${data}" alt="QRIS data" width="350"></body></html>`;
+async function handleRequest(data) {
+  let content = `<!doctype html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"><title>QRIS</title></head><body><img src="https://cdn.jsdelivr.net/gh/ihsangan/files/qris.svg" alt="QRIS logo" width="220" style="margin:27px 0"><img src="https://cdn.jsdelivr.net/gh/ihsangan/files/gpn.svg" alt="GPN logo" width="50" style="float:right"><br><center><img src="https://chart.googleapis.com/chart?cht=qr&chs=350x350&chld=Q|1&chl=${data.data}" alt="QRIS data" width="350"></body></html>`;
   return new Response(content, {headers:{"Content-Type":"text/html"}})
 }
 addEventListener('fetch', event => {
   const { request } = event;
-  const { url } = request;
+  const { url } = request
+  const { headers} = request;
   if (url.includes('submit')) {
     return event.respondWith(new Response(htmlForm, {headers:{"Content-Type":"text/html"}}));
   }
-  if (request.method === 'POST') {
+  if (request.method === 'POST' && headers.get('content-type').includes('form') {
     return event.respondWith(readRequestBody(request));
   } else if (request.method === 'GET') {
     return event.respondWith(new Response(`The request was a GET`));
