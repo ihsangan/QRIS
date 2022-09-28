@@ -22,8 +22,9 @@ async function readRequestBody(request) {
   } 
 }
 async function handleRequest(request) {
-  let data = await readRequestBody(request)
-  let content = `<!doctype html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"/><title>QRIS</title></head><body><img src="https://cdn.jsdelivr.net/gh/ihsangan/files/qris.svg" alt="QRIS logo" width="220" style="margin:27px 0"/><img src="https://cdn.jsdelivr.net/gh/ihsangan/files/gpn.svg" alt="GPN logo" width="50" style="float:right"/><br><center><img src="https://qr.isan.eu.org/v1/create-qr-code/?size=350x350&ecc=H&qrzone=0&margin=0&&format=svg&data=${data}" alt="QRIS data"/></body></html>`;
+  let data = await readRequestBody(request);
+  let price = await request.formData().get('price')
+  let content = `<!doctype html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"/><title>QRIS</title></head><body><img src="https://cdn.jsdelivr.net/gh/ihsangan/files/qris.svg" alt="QRIS logo" width="220" style="margin:27px 0"/><img src="https://cdn.jsdelivr.net/gh/ihsangan/files/gpn.svg" alt="GPN logo" width="50" style="float:right"/><br><center><img src="https://qr.isan.eu.org/v1/create-qr-code/?size=350x350&ecc=H&qrzone=0&margin=0&&format=svg&data=${data}" alt="QRIS data"/><br><h3>${price}</body></html>`;
   return new Response(content, {headers:{"Content-Type":"text/html"}})
 }
 addEventListener('fetch', event => {
@@ -35,6 +36,6 @@ addEventListener('fetch', event => {
   if (request.method === 'POST') {
     return event.respondWith(handleRequest(request));
   } else if (request.method === 'GET') {
-    return event.respondWith(new Response(`The request was a GET`));
+    return event.respondWith(new Response('https://github.com/ihsangan/qris'));
   }
 });
