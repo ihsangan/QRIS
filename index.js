@@ -15,7 +15,7 @@ async function readRequestBody(request) {
     text = text.replace('010211', '010212').replace('5303360', `5303360540${price.length}${price}`).slice(0, -4);
     let calc = crc16(text).toString(16).toUpperCase()
     let res = `{ "data": "${text}${calc}" }`;
-    return handleRequest(data);
+    return new Response(res);
   }
 }
 
