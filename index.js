@@ -9,7 +9,7 @@ async function readRequestBody(request) {
     let data = JSON.parse(JSON.stringify(body));
     let text = data.data;
     let price = data.price;
-    text = text.slice(0, -8).replace('11','12').concat(`540${price.length}${price}`,'9941QRIS generated from: api.isan.eu.org/qris','6304')
+    text = text.slice(0, -8).replace('11','12').concat(`540${price.length}${price}`,'9920api.isan.eu.org/qris','6304')
     let calc = crc16(text).toString(16).toUpperCase()
     data = `${text}${calc}`;
     return data;
@@ -22,7 +22,7 @@ async function handleRequest(request) {
 addEventListener('fetch', event => {
   const { request } = event;
   const { url } = request;
-  if (url.includes('submit')) {
+  if (url.includes('/submit')) {
     return event.respondWith(new Response(htmlForm, {headers:{"Content-Type":"text/html"}}));
   }
   if (request.method === 'POST') {
