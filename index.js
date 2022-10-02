@@ -7,8 +7,8 @@ async function readRequestBody(request) {
       body[entry[0]] = entry[1];
     }
     let data = JSON.parse(JSON.stringify(body));
-    let text = data.data;
-    let price = data.price;
+    let text = formData.get('data')
+    let price = formData.get('price');
     text = text.slice(0, -8).replace('11','12').concat(`540${price.length}${price}`,'9920api.isan.eu.org/qris','6304')
     let calc = crc16(text).toString(16).toUpperCase()
     data = `${text}${calc}`;
