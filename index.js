@@ -2,11 +2,6 @@ let crcTable=[0,4129,8258,12387,16516,20645,24774,28903,33032,37161,41290,45419,
 let htmlForm = `<!DOCTYPE html><html><head><meta content="width=device-width,initial-scale=1" name="viewport"><title>Dynamic QRIS Generator</title><body><form action="/qris" method="POST" autocomplete="on"><textarea name="data" rows="4" cols="30" placeholder="QRIS data" required></textarea><br><input type="number" name="price" placeholder="Price" required/><select name="type"><option selected value="html">HTML</option><option value="json">JSON</option></select><br><input type="submit" value="submit"></form></body></html>`;
 async function readRequestBody(request) {
     const formData = await request.formData();
-    const body = {};
-    for (const entry of formData.entries()) {
-      body[entry[0]] = entry[1];
-    }
-    let data = JSON.parse(JSON.stringify(body));
     let text = formData.get('data')
     let price = formData.get('price');
     text = text.slice(0, -8).replace('11','12').concat(`540${price.length}${price}`,'9920api.isan.eu.org/qris','6304')
