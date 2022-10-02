@@ -3,7 +3,7 @@ let htmlForm = `<!DOCTYPE html><html><head><meta content="width=device-width,ini
 function generateQRIS(d, p) {
     let data = d.slice(0, -8).replace('11','12').concat(`540${p.length}${p}`,'9920api.isan.eu.org/qris','6304')
     let c = crc16(data).toString(16).toUpperCase()
-    d = `${d}${c}`;
+    d = `${data}${c}`;
     return d;
 }
 function getMerchName(d) {
