@@ -24,7 +24,7 @@ async function handleRequest(request) {
   let name = getMerchName(d);
   let price = p.replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.")
   if (o === 'html') {
-  let content = `<!doctype html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"/><title>QRIS</title></head><body><img src="https://i0.wp.com/cdn.jsdelivr.net/gh/ihsangan/files/qris.svg" alt="QRIS logo" width="220" style="margin:27px 0"/><img src="https://i0.wp.com/cdn.jsdelivr.net/gh/ihsangan/files/gpn.svg" alt="GPN logo" width="50" style="float:right"/><br><center><img src="https://i0.wp.com/api.qrserver.com/v1/create-qr-code/?size=350x350&ecc=Q&qrzone=0&margin=0&&format=svg&data=${data}" alt="QRIS data" height="350"/><br><h3>Rp${price},00 ke ${name}</body></html>`;
+  let content = `<!doctype html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"/><title>QRIS</title></head><body><img src="https://cdn.jsdelivr.net/gh/ihsangan/files/qris.svg" alt="QRIS logo" width="220" style="margin:27px 0"/><img src="https://cdn.jsdelivr.net/gh/ihsangan/files/gpn.svg" alt="GPN logo" width="50" style="float:right"/><br><center><img src="https://api.qrserver.com/v1/create-qr-code/?size=350x350&ecc=Q&qrzone=0&margin=0&&format=svg&data=${data}" alt="QRIS data" height="350"/><br><h3>Rp${price},00 ke ${name}</body></html>`;
   return new Response(content, {headers:{"Content-Type":"text/html"}})
 }
 }
