@@ -40,7 +40,7 @@ async function handleRequest(request) {
   if (o === 'json') {
     let content = `{ "name": "${name}", "price": "${price}", "data": "${data}" }`
     return new Response(content, {
-      headers: { "Content-Type": "application/json; charset=utf-8"}
+      headers: { "Content-Type": "application/json; charset=utf-8"})
     }
   }
   else {
