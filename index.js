@@ -9,7 +9,7 @@ function crc16($) {
 };
 let htmlForm = `<!DOCTYPE html><html><head><meta content="width=device-width,initial-scale=1" name="viewport"><title>Dynamic QRIS Generator</title><body><form action="/qris" method="POST" autocomplete="on"><textarea name="data" rows="4" cols="30" placeholder="QRIS data" required></textarea><br><input type="number" name="price" placeholder="Price" required/><select name="output"><option selected value="html">HTML</option><option value="json">JSON</option></select><br><input type="submit" value="submit"></form></body></html>`;
 function generateQRIS(d, p) {
-  let data = d.slice(0, -4).replace('11', '12').replace('3360', `3360540${p.length}${p}`)
+  let data = d.slice(0, -4).replace('3360', `3360540${p.length}${p}`)
   let c = crc16(data).toString(16).toUpperCase()
   d = `${data}${c}`;
   return d;
@@ -32,8 +32,7 @@ async function handleRequest(request) {
   let name = getMerchName(d);
   let price = `Rp${p.replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.")},00`
   if (o === 'html') {
-    let content = `<!doctype html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"/><title>QRIS</title></head><body><img src="https://cdn.jsdelivr.net/gh/ihsangan/files/qris.svg" alt="QRIS logo" width="220" style="margin:27px 0"/><img src="https://cdn.jsdelivr.net/gh/ihsangan/files/gpn.svg" alt="GPN logo" width="50" style="float:right"/><br><center><img src="https://qr.isan.eu.org/v1/create-qr-code/?size=350x350&ecc=Q&qzone=0&margin=0&&format=svg&data=${data}" alt="QRIS data" height="350" onclick="navigator.share({text:'Silahkan ambil screenshot',url:'https://qr.isan.eu.org/v1/create-qr-code/?size=350x350&ecc=Q&qzone=2&margin=0&&format=png&data=${data}'
-  })"/><br><h3>${price} ke ${name}</body></html>`;
+    let content = `<!doctype html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"/><title>QRIS</title></head><body><img src="https://cdn.jsdelivr.net/gh/ihsangan/files/qris.svg" alt="QRIS logo" width="220" style="margin:27px 0"/><img src="https://cdn.jsdelivr.net/gh/ihsangan/files/gpn.svg" alt="GPN logo" width="50" style="float:right"/><br><center><img src="https://qr.isan.eu.org/v1/create-qr-code/?size=350x350&ecc=Q&qzone=0&margin=0&&format=svg&data=${data}" alt="QRIS data" height="350" onclick="navigator.share({text:'Silahkan ambil screenshot',url:'https://qr.isan.eu.org/v1/create-qr-code/?size=350x350&ecc=Q&qzone=2&margin=0&&format=png&data=${data}'})"/><br><h3>${price} ke ${name}</body></html>`;
     return new Response(content, {
       headers: { "Content-Type": "text/html" }
     })
