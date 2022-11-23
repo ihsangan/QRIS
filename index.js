@@ -21,8 +21,8 @@ function getMerchInfo(d) {
   lmn = lmn + 2;
   let mmn = `-${lgh - lmn - mnn}`
   let mn = d.slice(lmn, mmn)
-  let anmid = text.indexOf('0215ID') + 4
-  let nmid = text.slice(anmid, anmid + 15)
+  let anmid = d.indexOf('0215ID') + 4
+  let nmid = d.slice(anmid, anmid + 15)
   let res = `{"name":"${mn}","nmid":"${nmid}"}`
   return res
 };
