@@ -14,14 +14,17 @@ function generateQRIS(d, p) {
   d = `${data}${c}`;
   return d;
 };
-function getMerchName(d) {
+function getMerchInfo(d) {
   let lgh = d.length
   let lmn = d.indexOf('02ID59') + 6
   let mnn = d.slice(lmn, lmn + 2)
   lmn = lmn + 2;
   let mmn = `-${lgh - lmn - mnn}`
   let mn = d.slice(lmn, mmn)
-  return mn
+  let anmid = text.indexOf('0215ID') + 4
+  let nmid = text.slice(anmid, anmid + 15)
+  let res = `{"name":"${mn}","nmid":"${nmid}"}`
+  return res
 };
 async function handleRequest(request) {
   const formData = await request.formData()
@@ -29,16 +32,16 @@ async function handleRequest(request) {
   let p = formData.get('price');
   let o = formData.get('output');
   let data = generateQRIS(d, p);
-  let name = getMerchName(d);
+  let info = getMerchInfo(d);
   let price = `Rp${p.replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.")},00`
   if (o === 'html') {
-    let content = `<!doctype html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"/><title>QRIS</title></head><body><img src="https://cdn.jsdelivr.net/gh/ihsangan/files/qris.svg" alt="QRIS logo" width="220" style="margin:27px 0"/><img src="https://cdn.jsdelivr.net/gh/ihsangan/files/gpn.svg" alt="GPN logo" width="50" style="float:right"/><br><center><img src="https://qr.isan.eu.org/v1/create-qr-code/?size=350x350&ecc=Q&qzone=0&margin=0&&format=svg&data=${data}" alt="QRIS data" height="350" onclick="navigator.share({text:'Silahkan ambil screenshot',url:'https://qr.isan.eu.org/v1/create-qr-code/?size=350x350&ecc=Q&qzone=2&margin=0&&format=png&data=${data}'})"/><br><h3>${price} ke ${name}</body></html>`;
+    let content = `<!doctype html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"/><title>QRIS</title></head><body><img src="https://cdn.jsdelivr.net/gh/ihsangan/files/qris.svg" alt="QRIS logo" width="220" style="margin:27px 0"/><img src="https://cdn.jsdelivr.net/gh/ihsangan/files/gpn.svg" alt="GPN logo" width="50" style="float:right"/><br><center><img src="https://qr.isan.eu.org/v1/create-qr-code/?size=350x350&ecc=Q&qzone=0&margin=0&&format=svg&data=${data}" alt="QRIS data" height="350" onclick="navigator.share({text:'Silahkan ambil screenshot',url:'https://qr.isan.eu.org/v1/create-qr-code/?size=350x350&ecc=Q&qzone=2&margin=0&&format=png&data=${data}'})"/><br><h3>${price} ke ${info.name}</body></html>`;
     return new Response(content, {
-      headers: { "Content-Type": "text/html" }
+      headers: { "Content-Type": "text/html; charset=utf-8" }
     })
   }
   if (o === 'json') {
-    let content = `{"name":"${name}","price":"${price}","data": "${data}"}`
+    let content = `{"name":"${info.name}","price":"${price}","data": "${data}"}`
     return new Response(content, {
       headers: { "Content-Type": "application/json; charset=utf-8"}
     })
