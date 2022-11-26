@@ -33,7 +33,7 @@ async function handleRequest(request) {
   let o = formData.get('output');
   let data = generateQRIS(d, p);
   let info = JSON.parse(getMerchInfo(d, p));
-  if (!d.starstWith('000201010211')) {
+  if (!d.startsWith('000201010211')) {
     return new Response('https://github.com/ihsangan/qris')
   }
   if (o === 'html') {
