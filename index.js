@@ -33,10 +33,7 @@ async function handleRequest(request) {
   let o = formData.get('output');
   let data = generateQRIS(d, p);
   let info = JSON.parse(getMerchInfo(d, p));
-  if (!d.startWith('000201010211')) {
-    return new Response('https://github.com/ihsangan/qris')
-  }
-  if (o === 'html') {
+  if (o === 'html' && d.startWith('000201010211')) {
     let content = `<!doctype html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"/><title>QRIS</title></head><body><img src="https://cdn.jsdelivr.net/gh/ihsangan/files/qris.svg" alt="QRIS logo" width="220" style="margin:27px 0"/><img src="https://cdn.jsdelivr.net/gh/ihsangan/files/gpn.svg" alt="GPN logo" width="50" style="float:right"/><br><center><img src="https://qr.isan.eu.org/v1/create-qr-code/?size=350x350&ecc=Q&qzone=0&margin=0&&format=svg&data=${data}" alt="QRIS data" height="350" onclick="navigator.share({text:'Silahkan ambil screenshot',url:'https://qr.isan.eu.org/v1/create-qr-code/?size=350x350&ecc=Q&qzone=2&margin=0&&format=png&data=${data}'})"/><br><h3>${info.price} ke ${info.name}</body></html>`;
     return new Response(content, {
       headers: { "Content-Type": "text/html; charset=utf-8" }
