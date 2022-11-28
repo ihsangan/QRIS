@@ -33,7 +33,7 @@ async function handleRequest(request) {
   let o = formData.get('output');
   let data = generateQRIS(d, p);
   let info = JSON.parse(getMerchInfo(d, p));
-  if (!d.startsWith('000201010211') || isNaN(p) || p > 9999999 o === null) {
+  if (!d.startsWith('000201010211') || isNaN(p) || p > 9999999 || o === null) {
     return new Response('https://github.com/ihsangan/qris', {
       status: 400
     })
