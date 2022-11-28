@@ -66,7 +66,7 @@ addEventListener('fetch', event => {
   if (request.method === 'POST' && request.headers.get('Content-Type').includes('form')) {
     return event.respondWith(handleRequest(request));
   } else {
-    return event.respondWith(new Response('https://github.com/ihsangan/qris'🤝, {
+    return event.respondWith(new Response('https://github.com/ihsangan/qris', {
       status: 400
     }));
   }
