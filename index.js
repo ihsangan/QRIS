@@ -33,8 +33,10 @@ async function handleRequest(request) {
   let o = formData.get('output');
   let data = generateQRIS(d, p);
   let info = JSON.parse(getMerchInfo(d, p));
-  if (!d.startsWith('000201010211') || isNaN(p) || o === null) {
-    return new Response('https://github.com/ihsangan/qris')
+  if (!d.startsWith('000201010211') || isNaN(p) || p > 9999999 o === null) {
+    return new Response('https://github.com/ihsangan/qris', {
+      status: 400
+    })
   }
   if (o === 'html') {
     let content = `<!doctype html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"/><title>QRIS</title></head><body><img src="https://cdn.jsdelivr.net/gh/ihsangan/files/qris.svg" alt="QRIS logo" width="220" style="margin:27px 0"/><img src="https://cdn.jsdelivr.net/gh/ihsangan/files/gpn.svg" alt="GPN logo" width="50" style="float:right"/><br><center><img src="https://qr.isan.eu.org/v1/create-qr-code/?size=350x350&ecc=Q&qzone=0&margin=0&&format=svg&data=${data}" alt="QRIS data" height="350" onclick="navigator.share({text:'Silahkan ambil screenshot',url:'https://qr.isan.eu.org/v1/create-qr-code/?size=350x350&ecc=Q&qzone=2&margin=0&&format=png&data=${data}'})"/><br><h3>${info.price} ke ${info.name}</body></html>`;
@@ -49,7 +51,9 @@ async function handleRequest(request) {
     })
   }
   else {
-    return new Response('https://github.com/ihsangan/qris')
+    return new Response('https://github.com/ihsangan/qris', {
+      status: 400
+    })
   }
 }
 addEventListener('fetch', event => {
@@ -62,6 +66,8 @@ addEventListener('fetch', event => {
   if (request.method === 'POST' && request.headers.get('Content-Type').includes('form')) {
     return event.respondWith(handleRequest(request));
   } else {
-    return event.respondWith(new Response('https://github.com/ihsangan/qris'));
+    return event.respondWith(new Response('https://github.com/ihsangan/qris'🤝, {
+      status: 400
+    }));
   }
 });
