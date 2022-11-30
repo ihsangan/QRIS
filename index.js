@@ -7,7 +7,7 @@ function crc16($) {
   }
   return (0 ^ A) & 65535
 };
-let htmlForm = `<!DOCTYPE html><html><head><meta content="width=device-width,initial-scale=1" name="viewport"><title>Dynamic QRIS Generator</title><body><form action="/qris" method="POST" autocomplete="on"><textarea name="data" rows="4" cols="30" placeholder="QRIS data" required></textarea><br><input type="number" name="price" placeholder="Price" required/><select name="output"><option selected value="html">HTML</option><option value="json">JSON</option></select><br><input type="submit" value="submit"></form></body></html>`;
+let htmlForm = `<!DOCTYPE html><html><head><meta content="width=device-width,initial-scale=1" name="viewport"><title>Dynamic QRIS Generator</title><body><form action="/" method="POST" autocomplete="on"><textarea name="data" rows="4" cols="30" placeholder="QRIS data" required></textarea><br><input type="number" name="price" placeholder="Price" required/><select name="output"><option selected value="html">HTML</option><option value="json">JSON</option><option value="raw">RAW</option></select><br><input type="submit" value="submit"></form></body></html>`;
 function generateQRIS(d, p) {
   let data = d.slice(0, -4).replace('3360', `3360540${p.length}${p}`)
   let c = crc16(data).toString(16).toUpperCase()
@@ -30,10 +30,10 @@ async function handleRequest(request) {
   const formData = await request.formData()
   let d = formData.get('data');
   let p = formData.get('price');
-  let o = formData.get('output');
+  let o = formData.get('output').toLowerCase();
   let data = generateQRIS(d, p);
   let info = JSON.parse(getMerchInfo(d, p));
-  if (!d.startsWith('000201010211') || isNaN(p) || p > 9999999 || o === null) {
+  if (!d.startsWith('000201010211') || isNaN(p) || p > 9999999 || p < 0 || o === null) {
     return new Response('https://github.com/ihsangan/qris', {
       status: 400
     })
@@ -49,6 +49,9 @@ async function handleRequest(request) {
     return new Response(content, {
       headers: { "Content-Type": "application/json; charset=utf-8"}
     })
+  }
+  if ( o === 'raw') {
+    return new Response(data)
   }
   else {
     return new Response('https://github.com/ihsangan/qris', {
