@@ -9,7 +9,7 @@ function crc16($) {
 };
 let htmlForm = `<!DOCTYPE html><html><head><meta content="width=device-width,initial-scale=1" name="viewport"><title>Dynamic QRIS Generator</title><body><form action="/" method="POST" autocomplete="on"><textarea name="data" rows="4" cols="30" placeholder="QRIS data" required></textarea><br><input type="number" name="price" placeholder="Price" required/><select name="output"><option selected value="html">HTML</option><option value="json">JSON</option><option value="raw">RAW</option></select><br><input type="submit" value="submit"></form></body></html>`;
 function generateQRIS(d, p) {
-  let data = d.slice(0, -4).replace('3360', `3360540${p.length}${p}`)
+  let data = d.slice(0, -4).replace('11', '12').replace('3360', `3360540${p.length}${p}`)
   let c = crc16(data).toString(16).toUpperCase()
   d = `${data}${c}`;
   return d;
