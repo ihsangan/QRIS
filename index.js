@@ -59,6 +59,18 @@ async function handleRequest(request) {
     })
   }
 }
+async function verify(request) {
+  const formData = await request.formData();
+  const response = formData.get('g-recaptcha-response');
+  const verifyUrl = `https://www.google.com/recaptcha/api/siteverify?secret=6LfriLkkAAAAAMAdKDmmMm7lkNcLRVxptHdRkgAa&response=${response}`;
+  const verifyResponse = await fetch(verifyUrl, { method: 'POST' });
+  const verifyData = await verifyResponse.json();
+  if (verifyData.success) {
+    return handleRequest(request);
+  } else {
+    return new Response('Invalid reCAPTCHA response', { status: 403 });
+  }
+}
 addEventListener('fetch', event => {
   const { request } = event;
   if (request.url.includes('/submit')) {
@@ -67,7 +79,7 @@ addEventListener('fetch', event => {
     }));
   }
   if (request.method === 'POST' && request.headers.get('Content-Type').includes('form')) {
-    return event.respondWith(handleRequest(request));
+    return event.respondWith(verify(request));
   } else {
     return event.respondWith(new Response('https://github.com/ihsangan/qris', {
       status: 400
