@@ -64,7 +64,7 @@ async function verify(request) {
   const response = formData.get('g-recaptcha-response');
   const verifyUrl = `https://www.google.com/recaptcha/api/siteverify?secret=6LfriLkkAAAAAMAdKDmmMm7lkNcLRVxptHdRkgAa&response=${response}`;
   const verifyResponse = await fetch(verifyUrl, { method: 'POST' });
-  const verifyData = await verifyResponse.json();
+  const verifyData = await verifyResponse.clone().json();
   if (verifyData.success) {
     return handleRequest(request);
   } else {
