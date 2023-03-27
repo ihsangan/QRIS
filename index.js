@@ -30,7 +30,7 @@ async function handleRequest(request) {
   const formData = await request.formData()
   let d = formData.get('data');
   let p = formData.get('price');
-  let o = formData.get('output').toLowerCase();
+  let o = formData.get('output');
   let data = generateQRIS(d, p);
   let info = JSON.parse(getMerchInfo(d, p));
   if (!d.startsWith('000201010211') || isNaN(p) || p > 9999999 || p < 1 || o === null) {
