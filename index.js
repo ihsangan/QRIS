@@ -7,10 +7,18 @@ function crc16($) {
   }
   return (0 ^ A) & 65535
 };
-let htmlForm = `<!DOCTYPE html><html><head><meta content="width=device-width,initial-scale=1" name="viewport"><title>Dynamic QRIS Generator</title><body><form action="/" method="POST" autocomplete="on"><textarea name="data" rows="4" cols="30" placeholder="QRIS data" required></textarea><br><input type="number" name="price" placeholder="Price" required/><select name="output"><option selected value="html">HTML</option><option value="json">JSON</option><option value="raw">RAW</option></select><br><div class="g-recaptcha" data-sitekey="6LfriLkkAAAAAJbw8cU5FifUJfskdsPW6ZsNscWO"></div><be><input type="submit" value="submit"></form><script src="https://www.google.com/recaptcha/api.js" async defer></script></body></html>`;
-function generateQRIS(d, p) {
-  let data = d.slice(0, -4).replace('11', '12').replace('3360', `3360540${p.length + 3}${p}.00`)
+let htmlForm = `<!DOCTYPE html><html><head><meta content="width=device-width,initial-scale=1" name="viewport"><title>Dynamic QRIS Generator</title><body><form action="/" method="POST" autocomplete="on"><textarea name="data" rows="4" cols="30" placeholder="QRIS data" required></textarea><br><input type="number" name="price" placeholder="Price" required/><select name="output"><option selected value="html">HTML</option><option value="json">JSON</option><option value="raw">RAW</option></select><br><input type="submit" value="submit"></form></script></body></html>`;
+function generateQRIS(d, p, dyn) {
+  if (dyn === true) {
+    let data = d.slice(0, -4).replace('11', '12').replace('3360', `3360540${p.length + 3}${p}.00`)
+  }
+  else {
+    let data = d.slice(0, -4).replace('3360', `3360540${p.length + 3}${p}.00`)
+  }
   let c = crc16(data).toString(16).toUpperCase()
+  if (c.length === 3) {
+    c = `0${c}`
+  }
   d = `${data}${c}`;
   return d;
 };
@@ -30,11 +38,11 @@ async function handleRequest(request) {
   const formData = await request.formData()
   let d = formData.get('data');
   let p = formData.get('price');
-  let o = "json";
-  o = formData.get('output');
-  let data = generateQRIS(d, p);
+  let o = formData.get('output');
+  let dyn =formData.get('dynamic');
+  let data = generateQRIS(d, p, dyn);
   let info = JSON.parse(getMerchInfo(d, p));
-  if (!d.startsWith('000201010211') || isNaN(p) || p > 9999999 || p < 1 || o === null) {
+  if (!d.startsWith('000201010211') || isNaN(p) || p > 9999999 || p < 1) {
     return new Response('https://github.com/ihsangan/qris', {
       status: 400
     })
@@ -45,7 +53,7 @@ async function handleRequest(request) {
       headers: { "Content-Type": "text/html; charset=utf-8" }
     })
   }
-  if (o === 'json') {
+  if (o === 'json' || !o) {
     let content = `{"name":"${info.name}","nmid":"${info.nmid}","price":"${info.price}","data": "${data}"}`
     return new Response(content, {
       headers: { "Content-Type": "application/json; charset=utf-8"}
