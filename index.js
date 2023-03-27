@@ -30,7 +30,8 @@ async function handleRequest(request) {
   const formData = await request.formData()
   let d = formData.get('data');
   let p = formData.get('price');
-  let o = formData.get('output');
+  let o = "json";
+  o = formData.get('output');
   let data = generateQRIS(d, p);
   let info = JSON.parse(getMerchInfo(d, p));
   if (!d.startsWith('000201010211') || isNaN(p) || p > 9999999 || p < 1 || o === null) {
@@ -44,7 +45,7 @@ async function handleRequest(request) {
       headers: { "Content-Type": "text/html; charset=utf-8" }
     })
   }
-  if (o === 'json' || !o) {
+  if (o === 'json') {
     let content = `{"name":"${info.name}","nmid":"${info.nmid}","price":"${info.price}","data": "${data}"}`
     return new Response(content, {
       headers: { "Content-Type": "application/json; charset=utf-8"}
